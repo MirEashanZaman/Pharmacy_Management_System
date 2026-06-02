@@ -1,7 +1,0 @@
-DirectoryIndex index.php index.html
-
-# Ensure PHP index loads first and avoid directory-based 404 issues
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /pharmacy/
-</IfModule>
