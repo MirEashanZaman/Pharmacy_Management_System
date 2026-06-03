@@ -34,6 +34,15 @@ if ($existing) {
 if ($buy) {
     header("Location: cart.php");
 } else {
+    if (isset($_GET['ajax'])) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'message' => $med['name'] . ' added to cart!',
+            'cartCount' => getCartCount()
+        ]);
+        exit;
+    }
     header("Location: medicines.php?added=1");
 }
 exit;
