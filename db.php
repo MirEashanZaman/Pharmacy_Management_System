@@ -72,9 +72,21 @@ $conn->query("CREATE TABLE IF NOT EXISTS orders (
     delivery_phone VARCHAR(20),
     status ENUM('pending','processing','shipped','delivered','cancelled') DEFAULT 'pending',
     payment_method ENUM('cod','bkash','nagad','rocket') DEFAULT 'cod',
+    prescription_image VARCHAR(255) DEFAULT NULL,
+    rx_approved TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 )");
+
+// Safely Alter Table if columns are missing
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS prescription_image VARCHAR(255) DEFAULT NULL AFTER payment_method");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS rx_approved TINYINT(1) DEFAULT 0 AFTER prescription_image");
+$conn->query("ALTER TABLE medicines ADD COLUMN IF NOT EXISTS expiry_date DATE DEFAULT NULL AFTER requires_prescription");
+
+// Populate mock expiry dates for testing if any null
+$conn->query("UPDATE medicines SET expiry_date = DATE_ADD(CURDATE(), INTERVAL 15 DAY) WHERE (expiry_date IS NULL OR expiry_date = '0000-00-00') AND category = 'Painkiller'");
+$conn->query("UPDATE medicines SET expiry_date = DATE_SUB(CURDATE(), INTERVAL 5 DAY) WHERE (expiry_date IS NULL OR expiry_date = '0000-00-00') AND category = 'Gastric'");
+$conn->query("UPDATE medicines SET expiry_date = DATE_ADD(CURDATE(), INTERVAL 150 DAY) WHERE expiry_date IS NULL OR expiry_date = '0000-00-00'");
 
 
 $conn->query("CREATE TABLE IF NOT EXISTS order_items (
