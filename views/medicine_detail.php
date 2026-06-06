@@ -4,24 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= htmlspecialchars($med['name']) ?> - Pharmacy Management System</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php include 'navbar.php'; ?>
 <div class="main-container">
-    <div style="margin-bottom:16px;">
+    <div class="mb-2">
         <a href="#" class="btn btn-secondary" onclick="history.back(); return false;">← Back</a>
     </div>
 
-    <div class="grid-2" style="align-items:start;">
+    <div class="grid-2 align-start">
         
         <div>
             <div class="card mb-2">
                 <div class="card-body text-center">
                     <?php if($med['image'] && $med['image']!=='default_medicine.png' && file_exists('uploads/medicines/'.$med['image'])): ?>
-                        <img src="uploads/medicines/<?= htmlspecialchars($med['image']) ?>" style="max-width:100%; max-height:300px; border-radius:12px;" alt="<?= htmlspecialchars($med['name']) ?>">
+                        <img src="uploads/medicines/<?= htmlspecialchars($med['image']) ?>" class="medicine-detail-img" alt="<?= htmlspecialchars($med['name']) ?>">
                     <?php else: ?>
-                        <div style="font-size:1.5rem; font-weight:bold; color:#4f46e5; padding:40px; background:#f0f4ff; border-radius:12px;">MED</div>
+                        <div class="medicine-detail-placeholder">MED</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -41,12 +41,12 @@
                         <?php endif; ?>
                     </div>
 
-                    <h1 style="font-size:1.8rem; font-weight:800; margin-bottom:8px;"><?= htmlspecialchars($med['name']) ?></h1>
-                    <p style="color:#666; margin-bottom:4px;">Generic: <strong><?= htmlspecialchars($med['generic_name']) ?></strong></p>
-                    <p style="color:#666; margin-bottom:4px;">Brand: <strong><?= htmlspecialchars($med['brand']) ?></strong></p>
-                    <p style="color:#666; margin-bottom:16px;">Unit: <strong><?= htmlspecialchars($med['unit']) ?></strong></p>
+                    <h1 class="medicine-detail-title"><?= htmlspecialchars($med['name']) ?></h1>
+                    <p class="text-muted mb-1">Generic: <strong><?= htmlspecialchars($med['generic_name']) ?></strong></p>
+                    <p class="text-muted mb-1">Brand: <strong><?= htmlspecialchars($med['brand']) ?></strong></p>
+                    <p class="text-muted mb-2">Unit: <strong><?= htmlspecialchars($med['unit']) ?></strong></p>
 
-                    <div style="font-size:2.5rem; font-weight:800; color:var(--primary); margin-bottom:8px;">
+                    <div class="medicine-detail-price">
                         ৳<?= number_format($med['price'],2) ?>
                     </div>
                     <p class="text-muted mb-2">Per <?= $med['unit'] ?></p>
@@ -62,8 +62,8 @@
                     </div>
                     <?php endif; ?>
 
-                    <div style="background:#f8f9fa; border-radius:10px; padding:16px; margin-bottom:20px;">
-                        <p style="line-height:1.8;"><?= nl2br(htmlspecialchars($med['description'])) ?></p>
+                    <div class="content-box-light mb-2">
+                        <p class="lh-18"><?= nl2br(htmlspecialchars($med['description'])) ?></p>
                     </div>
 
                     <?php if($med['seller_name']): ?>
@@ -73,15 +73,15 @@
 
                     <?php if($user && $user['role']==='customer' && $med['stock']>0): ?>
                     <div class="d-flex gap-1">
-                        <a href="add_to_cart.php?id=<?= $med['id'] ?>" class="btn btn-primary" style="flex:1; padding:14px; font-size:1rem;">
+                        <a href="add_to_cart.php?id=<?= $med['id'] ?>" class="btn btn-primary flex-1 btn-large">
                             Add to Cart
                         </a>
-                        <a href="add_to_cart.php?id=<?= $med['id'] ?>&buy=1" class="btn btn-success" style="flex:1; padding:14px; font-size:1rem;">
+                        <a href="add_to_cart.php?id=<?= $med['id'] ?>&buy=1" class="btn btn-success flex-1 btn-large">
                             Buy Now
                         </a>
                     </div>
                     <?php elseif(!$user): ?>
-                    <a href="login.php" class="btn btn-primary w-100" style="padding:14px; font-size:1rem;">Login to Purchase</a>
+                    <a href="login.php" class="btn btn-primary w-100 btn-large">Login to Purchase</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -92,7 +92,7 @@
     <div class="card mt-3">
         <div class="card-header">
             <span>Customer Reviews</span>
-            <span class="text-muted" style="font-size:0.85rem;"><?= $reviews->num_rows ?> review(s)</span>
+            <span class="text-muted fs-md"><?= $reviews->num_rows ?> review(s)</span>
         </div>
         <div class="card-body">
             <?php if($success): ?><div class="alert alert-success"><?= $success ?></div><?php endif; ?>
@@ -101,12 +101,12 @@
             
             <?php if($user && $user['role']==='customer'): ?>
                 <?php if($canReview && !$alreadyReviewed): ?>
-                <div style="background:#f8f9ff; border-radius:12px; padding:20px; margin-bottom:24px;">
-                    <h3 style="font-size:1rem; margin-bottom:16px;">Write Your Review</h3>
+                <div class="review-form-box">
+                    <h3 class="fs-lg mb-2">Write Your Review</h3>
                     <form method="POST">
                         <div class="form-group">
                             <label class="form-label">Rating *</label>
-                            <div class="stars" id="starRating" style="cursor:pointer;">
+                            <div class="stars cursor-pointer" id="starRating">
                                 <?php for($i=1;$i<=5;$i++): ?>
                                     <span class="star" data-val="<?= $i ?>" onclick="setRating(<?= $i ?>)" onmouseover="hoverRating(<?= $i ?>)" onmouseout="resetHover()">★</span>
                                 <?php endfor; ?>
@@ -131,28 +131,28 @@
 
             
             <?php if($reviews->num_rows===0): ?>
-                <div class="text-center" style="padding:30px; color:#888;">No reviews yet. Be the first to review!</div>
+                <div class="text-center p-30 text-muted">No reviews yet. Be the first to review!</div>
             <?php else: ?>
             <?php while($rev=$reviews->fetch_assoc()): ?>
-            <div style="border-bottom:1px solid #f0f0f0; padding:16px 0;">
+            <div class="review-row">
                 <div class="d-flex justify-between align-center mb-1">
                     <div class="d-flex align-center gap-1">
-                        <div style="width:36px;height:36px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;">
+                        <div class="reviewer-avatar-placeholder">
                             <?= strtoupper(substr($rev['reviewer_name'],0,1)) ?>
                         </div>
                         <div>
                             <strong><?= htmlspecialchars($rev['reviewer_name']) ?></strong>
-                            <div style="font-size:0.75rem; color:#888;"><?= date('d M Y', strtotime($rev['created_at'])) ?></div>
+                            <div class="fs-sm text-muted"><?= date('d M Y', strtotime($rev['created_at'])) ?></div>
                         </div>
                     </div>
                     <div class="stars">
                         <?php for($i=1;$i<=5;$i++): ?>
-                            <span class="star <?= $i<=$rev['rating']?'filled':'' ?>" style="font-size:1rem;">★</span>
+                            <span class="star <?= $i<=$rev['rating']?'filled':'' ?> fs-md">★</span>
                         <?php endfor; ?>
                     </div>
                 </div>
                 <?php if($rev['comment']): ?>
-                <p style="line-height:1.7; color:#555;"><?= nl2br(htmlspecialchars($rev['comment'])) ?></p>
+                <p class="lh-17 text-muted"><?= nl2br(htmlspecialchars($rev['comment'])) ?></p>
                 <?php endif; ?>
             </div>
             <?php endwhile; ?>

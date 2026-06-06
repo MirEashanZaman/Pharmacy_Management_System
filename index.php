@@ -1,5 +1,6 @@
 <?php
 require_once 'session.php';
+$user = getUser();
 
 // Fetch a few featured medicines for customer view
 $featuredMeds = $conn->query("
@@ -17,157 +18,8 @@ $featuredMeds = $conn->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pharmacy Management System - Bangladesh's Trusted Online Pharmacy</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .hero-banner {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
-            color: white;
-            padding: 90px 20px;
-            text-align: center;
-            border-radius: 0 0 24px 24px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 48px;
-        }
-        .hero-banner h1 {
-            font-size: 3.2rem;
-            font-weight: 800;
-            margin-bottom: 18px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
-        .hero-banner p {
-            font-size: 1.25rem;
-            opacity: 0.95;
-            max-width: 750px;
-            margin: 0 auto 32px auto;
-            line-height: 1.6;
-        }
-        .search-container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .search-container input {
-            width: 100%;
-            padding: 16px 24px;
-            font-size: 1rem;
-            border-radius: 30px;
-            border: none;
-            outline: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .search-container button {
-            position: absolute;
-            right: 8px;
-            top: 6px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: var(--transition);
-        }
-        .search-container button:hover {
-            background: var(--primary-dark);
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 36px;
-            position: relative;
-            color: var(--primary-dark);
-        }
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--primary);
-            margin: 12px auto 0 auto;
-            border-radius: 2px;
-        }
-        
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 56px;
-        }
-        .category-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(60, 48, 112, 0.05);
-            text-decoration: none;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-        .category-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-        }
-        .category-icon {
-            font-size: 2.2rem;
-            color: var(--primary);
-        }
-        .category-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-            margin-bottom: 56px;
-        }
-        .benefit-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(60, 48, 112, 0.05);
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            transition: var(--transition);
-        }
-        .benefit-card:hover {
-            transform: translateY(-2px);
-        }
-        .benefit-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 1.35rem;
-            flex-shrink: 0;
-        }
-        .benefit-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--dark);
-        }
-        .benefit-card p {
-            font-size: 0.88rem;
-            color: #666;
-            line-height: 1.5;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
@@ -177,10 +29,16 @@ $featuredMeds = $conn->query("
 <div class="hero-banner">
     <h1>Quality Medicines, Delivered Fast</h1>
     <p>Bangladesh's trusted online healthcare shop. Search for registered brands, check stocks, upload prescriptions, and order safely to your doorstep across all 64 districts.</p>
-    <form action="medicines.php" method="GET" class="search-container">
+    <form action="medicines.php" method="GET" class="search-container" style="margin-bottom: 24px;">
         <input type="text" name="search" placeholder="Type generic names or brand medicines (e.g. Napa, Seclo)..." autocomplete="off" required>
         <button type="submit">Search Shop</button>
     </form>
+    <?php if(!$user): ?>
+    <div class="hero-cta">
+        <a href="login.php" class="btn btn-primary" style="padding: 12px 30px; font-size: 1rem; font-weight: 700; border-radius: 30px;">Sign In</a>
+        <a href="registration.php" class="btn btn-outline" style="padding: 12px 30px; font-size: 1rem; font-weight: 700; border-radius: 30px; background: rgba(255,255,255,0.15); color: white; border-color: white;">Sign Up</a>
+    </div>
+    <?php endif; ?>
 </div>
 
 <div class="main-container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">

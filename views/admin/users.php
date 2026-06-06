@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Users - Admin - Pharmacy Management System</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <?php include '../navbar.php'; ?>
@@ -30,20 +30,20 @@
                 <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Phone</th><th>Location</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                 <?php if($users->num_rows===0): ?>
-                <tr><td colspan="9" class="text-center" style="padding:40px;color:#888;">No users found</td></tr>
+                <tr><td colspan="9" class="text-center p-40 text-muted">No users found</td></tr>
                 <?php else: ?>
                 <?php while($u=$users->fetch_assoc()): ?>
                 <tr>
                     <td><?= $u['id'] ?></td>
                     <td>
-                        <div style="display:flex;align-items:center;gap:10px;">
+                        <div class="display-flex align-center gap-10">
                             <?php
                             $picSrc = '../uploads/profiles/'.($u['profile_pic']??'');
                             if($u['profile_pic'] && $u['profile_pic']!=='default_user.png' && file_exists($picSrc)):
                             ?>
-                            <img src="<?= $picSrc ?>" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="">
+                            <img src="<?= $picSrc ?>" class="avatar-img-sm" alt="">
                             <?php else: ?>
-                            <div style="width:36px;height:36px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;">
+                            <div class="avatar-placeholder-sm">
                                 <?= strtoupper(substr($u['name'],0,1)) ?>
                             </div>
                             <?php endif; ?>
@@ -71,9 +71,9 @@
                             <?php if($u['id']!==$user['id'] && $u['role'] !== 'admin'): ?>
                             <a href="?delete=<?= $u['id'] ?>&filter=<?= $filter ?>" class="btn btn-danger btn-sm" onclick="return confirm('Deactivate this user?')">Deactivate</a>
                             <?php elseif($u['id']=== $user['id']): ?>
-                            <span class="text-muted" style="font-size:0.8rem;">You</span>
+                            <span class="text-muted fs-md">You</span>
                             <?php else: ?>
-                            <span class="text-muted" style="font-size:0.8rem;">No actions available</span>
+                            <span class="text-muted fs-md">No actions available</span>
                             <?php endif; ?>
                         <?php else: ?>
                             <a href="?restore=<?= $u['id'] ?>&filter=<?= $filter ?>" class="btn btn-success btn-sm">Restore</a>

@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Profile - Pharmacy Management System</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php include 'navbar.php'; ?>
 <div class="main-container">
     <div class="page-header">
         <div><h1>My Profile</h1><p>Manage your account information</p></div>
-        <span class="badge badge-<?= $user['role']==='admin'?'danger':($user['role']==='salesperson'?'warning':'success') ?>" style="font-size:0.9rem; padding:8px 16px;">
+        <span class="badge badge-<?= $user['role']==='admin'?'danger':($user['role']==='salesperson'?'warning':'success') ?> badge-large">
             <?= ucfirst($user['role']) ?>
         </span>
     </div>
@@ -19,7 +19,7 @@
     <?php if($success): ?><div class="alert alert-success"><?= $success ?></div><?php endif; ?>
     <?php if($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <div class="grid-2" style="align-items:start; gap:24px;">
+    <div class="grid-2 align-start gap-24">
         
         <div class="card">
             <div class="card-header">Edit Profile</div>
@@ -33,13 +33,17 @@
                         ?>
                         <img src="<?= $picSrc ?>" class="profile-pic-lg" alt="Profile" id="profilePreview">
                         <?php else: ?>
-                        <div id="profilePreview" style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:flex;align-items:center;justify-content:center;font-size:3rem;margin:0 auto;border:4px solid var(--primary);">
+                        <div id="profilePreview" class="profile-avatar-fallback">
                             <?= strtoupper(substr($user['name'],0,1)) ?>
                         </div>
                         <?php endif; ?>
-                        <div class="mt-1">
-                            <label for="picUpload" class="btn btn-sm btn-outline" style="cursor:pointer;">Change Photo</label>
-                            <input type="file" name="profile_pic" id="picUpload" accept="image/*" style="display:none;" onchange="previewPic(event)">
+                        <div class="mt-1 display-flex justify-center gap-10 align-center">
+                            <label for="picUpload" class="btn btn-sm btn-outline cursor-pointer m-0">Change Photo</label>
+                            <input type="file" name="profile_pic" id="picUpload" accept="image/*" class="hidden" onchange="previewPic(event)">
+                            <?php if ($user['profile_pic'] && $user['profile_pic'] !== 'default_user.png'): ?>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removePhoto()" id="removePicBtn">Remove Photo</button>
+                            <?php endif; ?>
+                            <input type="hidden" name="remove_pic" id="removePicInput" value="0">
                         </div>
                     </div>
                     <div class="form-row">
@@ -54,7 +58,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email (cannot change)</label>
-                        <input type="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" readonly style="background:#f8f9fa;">
+                        <input type="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" readonly>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -112,22 +116,22 @@
             <div class="card">
                 <div class="card-header">Account Information</div>
                 <div class="card-body">
-                    <div style="display:flex; flex-direction:column; gap:12px;">
-                        <div style="display:flex; justify-content:space-between; padding:10px; background:#f8f9fa; border-radius:8px;">
+                    <div class="display-flex flex-column gap-12">
+                        <div class="profile-info-row">
                             <span class="text-muted">Role</span>
                             <span class="badge badge-<?= $user['role']==='admin'?'danger':($user['role']==='salesperson'?'warning':'success') ?>"><?= ucfirst($user['role']) ?></span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; padding:10px; background:#f8f9fa; border-radius:8px;">
+                        <div class="profile-info-row">
                             <span class="text-muted">Member Since</span>
                             <strong><?= date('d M Y', strtotime($user['created_at'])) ?></strong>
                         </div>
-                        <div style="display:flex; justify-content:space-between; padding:10px; background:#f8f9fa; border-radius:8px;">
+                        <div class="profile-info-row">
                             <span class="text-muted">Status</span>
                             <span class="badge badge-success">Active</span>
                         </div>
                         <?php if($user['role']==='customer'): ?>
                         <?php $orderCount=$this->db->query("SELECT COUNT(*) as c FROM orders WHERE user_id={$user['id']}")->fetch_assoc()['c']; ?>
-                        <div style="display:flex; justify-content:space-between; padding:10px; background:#f8f9fa; border-radius:8px;">
+                        <div class="profile-info-row">
                             <span class="text-muted">Total Orders</span>
                             <strong><?= $orderCount ?></strong>
                         </div>
@@ -158,8 +162,38 @@ function previewPic(e) {
             img.id = 'profilePreview';
             preview.replaceWith(img);
         }
+        document.getElementById('removePicInput').value = '0';
+        // Show remove button
+        let removeBtn = document.getElementById('removePicBtn');
+        if (!removeBtn) {
+            removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-sm btn-danger';
+            removeBtn.id = 'removePicBtn';
+            removeBtn.onclick = removePhoto;
+            removeBtn.textContent = 'Remove Photo';
+            document.getElementById('picUpload').parentElement.appendChild(removeBtn);
+        } else {
+            removeBtn.style.display = '';
+        }
     };
     reader.readAsDataURL(file);
+}
+function removePhoto() {
+    const preview = document.getElementById('profilePreview');
+    const input = document.getElementById('removePicInput');
+    input.value = '1';
+    
+    const placeholder = document.createElement('div');
+    placeholder.id = 'profilePreview';
+    placeholder.className = 'profile-avatar-fallback';
+    placeholder.textContent = '<?= strtoupper(substr($user['name'],0,1)) ?>';
+    
+    preview.replaceWith(placeholder);
+    
+    const removeBtn = document.getElementById('removePicBtn');
+    if (removeBtn) removeBtn.style.display = 'none';
+    document.getElementById('picUpload').value = '';
 }
 </script>
 </body>

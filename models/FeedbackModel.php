@@ -54,4 +54,39 @@ class FeedbackModel {
         $stmt->bind_param("iiiis", $userId, $medId, $orderId, $rating, $comment);
         return $stmt->execute();
     }
+
+    public function getDeliveredMedicines($userId) {
+        $query = "SELECT DISTINCT m.id, m.name, m.brand, m.image, o.id as order_id 
+                  FROM orders o 
+                  JOIN order_items oi ON o.id = oi.order_id 
+                  JOIN medicines m ON oi.medicine_id = m.id 
+                  WHERE o.user_id = ? AND o.status = 'delivered'
+                  AND NOT EXISTS (
+                      SELECT 1 FROM reviews r 
+                      WHERE r.user_id = ? AND r.medicine_id = m.id
+                  )";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("ii", $userId, $userId);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    public function getUserReviews($userId) {
+        $stmt = $this->db->prepare("SELECT r.*, m.name as medicine_name, m.brand as medicine_brand FROM reviews r JOIN medicines m ON r.medicine_id = m.id WHERE r.user_id = ? ORDER BY r.created_at DESC");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    public function deleteReview($reviewId, $userId) {
+        $stmt = $this->db->prepare("DELETE FROM reviews WHERE id=? AND user_id=?");
+        $stmt->bind_param("ii", $reviewId, $userId);
+        return $stmt->execute();
+    }
+
+    public function updateReview($reviewId, $userId, $rating, $comment) {
+        $stmt = $this->db->prepare("UPDATE reviews SET rating=?, comment=? WHERE id=? AND user_id=?");
+        $stmt->bind_param("isii", $rating, $comment, $reviewId, $userId);
+        return $stmt->execute();
+    }
 }

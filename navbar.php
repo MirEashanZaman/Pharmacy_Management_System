@@ -17,7 +17,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <li><a href="/pharmacy/index.php" class="<?= $currentPage=='index.php'?'active':'' ?>">Home</a></li>
             <li><a href="/pharmacy/medicines.php" class="<?= $currentPage=='medicines.php'?'active':'' ?>">Medicines</a></li>
             <li><a href="/pharmacy/login.php" class="<?= $currentPage=='login.php'?'active':'' ?>">Login</a></li>
-            <li><a href="/pharmacy/register.php" class="<?= $currentPage=='register.php'?'active':'' ?>">Register</a></li>
+            <li><a href="/pharmacy/registration.php" class="<?= $currentPage=='registration.php'?'active':'' ?>">Register</a></li>
         <?php elseif ($user['role'] === 'admin'): ?>
             <li><a href="/pharmacy/admin/dashboard.php" class="<?= strpos($currentPage,'dashboard')!==false?'active':'' ?>">Dashboard</a></li>
             <li><a href="/pharmacy/admin/users.php" class="<?= $currentPage=='users.php'?'active':'' ?>">Users</a></li>
@@ -31,6 +31,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <li><a href="/pharmacy/seller/add_medicine.php" class="<?= $currentPage=='add_medicine.php'?'active':'' ?>">Add Medicine</a></li>
             <li><a href="/pharmacy/seller/my_medicines.php" class="<?= $currentPage=='my_medicines.php'?'active':'' ?>">My Medicines</a></li>
             <li><a href="/pharmacy/seller/orders.php" class="<?= $currentPage=='orders.php'?'active':'' ?>">Orders</a></li>
+            <li><a href="/pharmacy/seller/feedback.php" class="<?= $currentPage=='feedback.php'?'active':'' ?>">Feedback</a></li>
             <li><a href="/pharmacy/profile.php"><?= htmlspecialchars($user['name']) ?></a></li>
             <li><a href="/pharmacy/logout.php" class="btn-logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a></li>
         <?php else: ?>

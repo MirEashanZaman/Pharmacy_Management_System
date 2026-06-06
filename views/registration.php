@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register - Pharmacy Management System</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="login-page">
-    <div class="login-box" style="max-width:520px;">
+    <div class="login-box login-box-wide">
         <div class="login-logo">
             <div class="icon"></div>
             <h2>Create Account</h2>
@@ -62,13 +62,13 @@
                 <label class="form-label">Full Address</label>
                 <textarea name="address" class="form-control" rows="2" placeholder="House no, road, area..."><?= htmlspecialchars($_POST['address']??'') ?></textarea>
             </div>
-            <button type="submit" class="btn btn-primary w-100" style="padding:14px; font-size:1rem;">
+            <button type="submit" class="btn btn-primary w-100 btn-large">
                 Create Account
             </button>
         </form>
         <?php endif; ?>
         <div class="text-center mt-2">
-            <p class="text-muted">Already have an account? <a href="login.php" style="color:var(--primary);font-weight:600;">Login here</a></p>
+            <p class="text-muted">Already have an account? <a href="login.php" class="link-primary">Login here</a></p>
         </div>
     </div>
 </div>

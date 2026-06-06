@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Add Medicine - Pharmacy Management System</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <?php include '../navbar.php'; ?>
@@ -17,7 +17,7 @@
     <?php if($success): ?><div class="alert alert-success"><?= $success ?> Redirecting...</div><?php endif; ?>
     <?php if($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <div class="grid-2" style="align-items:start; gap:24px;">
+    <div class="grid-2 align-start gap-24">
         <div class="card">
             <div class="card-header">Medicine Details</div>
             <div class="card-body">
@@ -69,7 +69,7 @@
                         <label class="form-label">Description</label>
                         <textarea name="description" class="form-control" rows="4" placeholder="Describe the medicine, its uses, dosage info..."><?= htmlspecialchars($_POST['description']??'') ?></textarea>
                     </div>
-                    <button type="submit" class="btn btn-success w-100" style="padding:14px; font-size:1rem;">Add Medicine</button>
+                    <button type="submit" class="btn btn-success w-100 btn-large">Add Medicine</button>
                 </form>
             </div>
         </div>
@@ -81,20 +81,20 @@
                     <div class="upload-icon" id="uploadIcon"></div>
                     <div class="upload-text">
                         <strong>Click to upload medicine image</strong><br>
-                        <span style="font-size:0.8rem; color:#999;">JPG, PNG, GIF up to 5MB</span>
+                        <span class="fs-8 text-muted-999">JPG, PNG, GIF up to 5MB</span>
                     </div>
                 </div>
-                <input type="file" name="image" id="imageInput" accept="image/*" style="display:none;" form="none" onchange="previewImage(event)">
-                <div id="imagePreview" style="display:none; margin-top:16px; text-align:center;">
-                    <img id="previewImg" style="max-width:100%; max-height:200px; border-radius:12px; border:2px solid var(--primary);" alt="">
+                <input type="file" name="image" id="imageInput" accept="image/*" class="display-none" form="none" onchange="previewImage(event)">
+                <div id="imagePreview" class="display-none mt-12 text-center">
+                    <img id="previewImg" class="medicine-preview-img-box" alt="">
                     <div class="mt-1">
                         <button onclick="clearImage()" class="btn btn-danger btn-sm">Remove</button>
                     </div>
                 </div>
 
-                <div style="margin-top:24px; background:#f0f4ff; border-radius:12px; padding:20px;">
-                    <h4 style="font-size:0.9rem; margin-bottom:12px; color:var(--primary);">Image Tips</h4>
-                    <ul style="font-size:0.85rem; color:#555; line-height:2; padding-left:20px;">
+                <div class="med-tips-box">
+                    <h4 class="med-tips-title">Image Tips</h4>
+                    <ul class="med-tips-list">
                         <li>Use a clear, high-quality photo</li>
                         <li>White background preferred</li>
                         <li>Show the medicine packaging</li>
@@ -103,9 +103,9 @@
                     </ul>
                 </div>
 
-                <div style="margin-top:16px; background:#fff3cd; border-radius:12px; padding:16px;">
-                    <h4 style="font-size:0.9rem; margin-bottom:8px; color:#856404;">Important</h4>
-                    <p style="font-size:0.85rem; color:#856404; line-height:1.6;">Ensure medicine information is accurate. Incorrect information may lead to account suspension.</p>
+                <div class="med-important-box">
+                    <h4 class="med-important-title">Important</h4>
+                    <p class="med-important-text">Ensure medicine information is accurate. Incorrect information may lead to account suspension.</p>
                 </div>
             </div>
         </div>

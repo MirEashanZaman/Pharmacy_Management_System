@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Medicines - Pharmacy Management System</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <?php include '../navbar.php'; ?>
@@ -17,8 +17,8 @@
     <?php if($success): ?><div class="alert alert-success"><?= $success ?></div><?php endif; ?>
 
     <?php if($meds->num_rows===0): ?>
-    <div class="card"><div class="card-body text-center" style="padding:60px;">
-        <div style="font-size:1.5rem;font-weight:bold;color:#4f46e5;margin-bottom:16px;">MED</div>
+    <div class="card"><div class="card-body text-center p-60">
+        <div class="empty-state-icon">MED</div>
         <h3>No medicines listed yet</h3>
         <p class="text-muted">Start adding medicines to sell</p>
         <a href="add_medicine.php" class="btn btn-success mt-2">Add First Medicine</a>
@@ -34,9 +34,9 @@
                 <tr>
                     <td>
                         <?php if($m['image']&&$m['image']!=='default_medicine.png'&&file_exists('../uploads/medicines/'.$m['image'])): ?>
-                            <img src="../uploads/medicines/<?= htmlspecialchars($m['image']) ?>" style="width:55px;height:55px;border-radius:10px;object-fit:cover;" alt="">
+                            <img src="../uploads/medicines/<?= htmlspecialchars($m['image']) ?>" class="med-img-md" alt="">
                         <?php else: ?>
-                            <div style="width:55px;height:55px;border-radius:10px;background:#f0f4ff;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:bold;color:#4f46e5;">MED</div>
+                            <div class="med-placeholder-md">MED</div>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -59,7 +59,7 @@
                     </td>
                     <td class="fw-bold"><?= $sold ?? 0 ?> sold</td>
                     <td>
-                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <div class="display-flex gap-6 flex-wrap">
                             <a href="edit_medicine.php?id=<?= $m['id'] ?>" class="btn btn-warning btn-sm">Edit</a>
                             <?php if($m['is_active']): ?>
                             <a href="?delete=<?= $m['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Remove this medicine from listing?')">Remove</a>

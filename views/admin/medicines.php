@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Medicines - Admin - Pharmacy Management System</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <?php include '../navbar.php'; ?>
@@ -24,15 +24,15 @@
                 </thead>
                 <tbody>
                 <?php if($meds->num_rows===0): ?>
-                <tr><td colspan="9" class="text-center" style="padding:40px;">No medicines found</td></tr>
+                <tr><td colspan="9" class="text-center p-40">No medicines found</td></tr>
                 <?php else: ?>
                 <?php while($m=$meds->fetch_assoc()): ?>
                 <tr>
                     <td>
                         <?php if($m['image']&&$m['image']!=='default_medicine.png'&&file_exists('../uploads/medicines/'.$m['image'])): ?>
-                            <img src="../uploads/medicines/<?= htmlspecialchars($m['image']) ?>" style="width:50px;height:50px;border-radius:8px;object-fit:cover;" alt="">
+                            <img src="../uploads/medicines/<?= htmlspecialchars($m['image']) ?>" class="med-img-sm" alt="">
                         <?php else: ?>
-                            <div style="width:50px;height:50px;border-radius:8px;background:#f0f4ff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:bold;color:#4f46e5;">MED</div>
+                            <div class="med-placeholder-sm">MED</div>
                         <?php endif; ?>
                     </td>
                     <td><strong><?= htmlspecialchars($m['name']) ?></strong><br><small class="text-muted"><?= htmlspecialchars($m['brand']) ?></small></td>

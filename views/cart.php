@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cart - Pharmacy Management System</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <?php include 'navbar.php'; ?>
@@ -48,12 +48,12 @@
                     </div>
                     <form method="POST" style="display:flex;align-items:center;gap:8px;">
                         <input type="hidden" name="cart_id" value="<?= $item['id'] ?>">
+                        <input type="hidden" name="update_qty" value="1">
                         <div class="qty-control">
                             <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
-                            <input name="qty" type="number" class="qty-num" value="<?= $item['quantity'] ?>" min="0" max="<?= $item['stock'] ?>" style="width:50px; border:none; text-align:center;">
+                            <input name="qty" type="number" class="qty-num" value="<?= $item['quantity'] ?>" min="0" max="<?= $item['stock'] ?>" style="width:50px; border:none; text-align:center;" onchange="this.form.submit()">
                             <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
                         </div>
-                        <button type="submit" name="update_qty" class="btn btn-warning btn-sm">Update</button>
                     </form>
                     <div style="font-weight:700; min-width:80px; text-align:right;">৳<?= number_format($item['price']*$item['quantity'],2) ?></div>
                     <a href="cart.php?remove=<?= $item['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Remove this item?')">Remove</a>
@@ -110,14 +110,13 @@
                         <textarea name="del_address" class="form-control" rows="3" placeholder="House no, road, area..." required><?= htmlspecialchars($user['address']??'') ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Payment Method</label>
+                        <label class="form-label">Payment Method *</label>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
                             <?php $methods=['cod'=>'Cash on Delivery','bkash'=>'bKash','nagad'=>'Nagad','rocket'=>'Rocket']; ?>
                             <?php foreach($methods as $val=>$label): ?>
-                            <label style="display:flex;align-items:center;gap:8px;padding:12px;border:2px solid #e9ecef;border-radius:8px;cursor:pointer;transition:all 0.2s;" 
-                                   onclick="this.parentElement.querySelectorAll('label').forEach(l=>l.style.borderColor='#e9ecef'); this.style.borderColor='var(--primary)'; this.style.background='#f0f4ff';">
-                                <input type="radio" name="payment_method" value="<?= $val ?>" <?= $val==='cod'?'checked':'' ?> style="display:none;">
-                                <?= $label ?>
+                            <label style="display:flex;align-items:center;gap:8px;padding:12px;border:2px solid #e9ecef;border-radius:8px;cursor:pointer;transition:all 0.2s;position:relative;">
+                                <input type="radio" name="payment_method" value="<?= $val ?>" required style="opacity:0; position:absolute; inset:0; cursor:pointer; width:100%; height:100%; pointer-events:auto; z-index:2;">
+                                <span style="position:relative; z-index:1; font-weight:600;"><?= $label ?></span>
                             </label>
                             <?php endforeach; ?>
                         </div>
@@ -147,6 +146,7 @@ function changeQty(btn, delta) {
     if (val < 0) val = 0;
     if (val > max) val = max;
     input.value = val;
+    btn.closest('form').submit();
 }
 document.querySelectorAll('input[name="payment_method"]').forEach(r => {
     r.addEventListener('change', () => {

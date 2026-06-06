@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="login-page">
@@ -27,7 +27,7 @@
                 <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
             </div>
 <button type="submit" class="btn btn-primary w-100" style="padding:14px; font-size:1rem; display:flex; justify-content:center; align-items:center;">Login</button>        <div class="text-center mt-2">
-            <p class="text-muted">Don't have an account? <a href="register.php" style="color:var(--primary);font-weight:600;">Register here</a></p>
+            <p class="text-muted">Don't have an account? <a href="registration.php" style="color:var(--primary);font-weight:600;">Register here</a></p>
         </div>
         <div style="margin-top:24px; padding:16px; background:#f8f9fa; border-radius:10px;">
             <p style="font-size:0.8rem; font-weight:600; margin-bottom:8px; color:#666;">Demo Credentials:</p>

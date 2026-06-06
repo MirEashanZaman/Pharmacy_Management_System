@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Medicine - Pharmacy Management System</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <?php include '../navbar.php'; ?>
@@ -17,7 +17,7 @@
     <?php if($success): ?><div class="alert alert-success"><?= $success ?></div><?php endif; ?>
     <?php if($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <div class="grid-2" style="align-items:start; gap:24px;">
+    <div class="grid-2 align-start gap-24">
         <div class="card">
             <div class="card-header">Medicine Details</div>
             <div class="card-body">
@@ -69,12 +69,12 @@
                         <textarea name="description" class="form-control" rows="4"><?= htmlspecialchars($med['description']) ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px;background:#f8f9fa;border-radius:8px;">
-                            <input type="checkbox" name="requires_prescription" <?= $med['requires_prescription']?'checked':'' ?> style="width:18px;height:18px;">
+                        <label class="checkbox-label-card">
+                            <input type="checkbox" name="requires_prescription" <?= $med['requires_prescription']?'checked':'' ?> class="checkbox-size-lg">
                             <span>Requires Prescription</span>
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-success w-100" style="padding:14px;">Save Changes</button>
+                    <button type="submit" class="btn btn-success w-100 btn-large">Save Changes</button>
                 </form>
             </div>
         </div>
@@ -85,11 +85,11 @@
                 
                 <div class="text-center mb-2">
                     <?php if($med['image']&&$med['image']!=='default_medicine.png'&&file_exists('../uploads/medicines/'.$med['image'])): ?>
-                    <img src="../uploads/medicines/<?= htmlspecialchars($med['image']) ?>" style="max-width:100%;max-height:200px;border-radius:12px;border:2px solid var(--primary);" alt="Current Image">
-                    <p class="text-muted mt-1" style="font-size:0.85rem;">Current image</p>
+                    <img src="../uploads/medicines/<?= htmlspecialchars($med['image']) ?>" class="medicine-preview-img-box" alt="Current Image">
+                    <p class="text-muted mt-1 fs-md">Current image</p>
                     <?php else: ?>
-                    <div style="height:150px;background:#f0f4ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:bold;color:#4f46e5;">MED</div>
-                    <p class="text-muted mt-1" style="font-size:0.85rem;">No image uploaded</p>
+                    <div class="med-placeholder-lg">MED</div>
+                    <p class="text-muted mt-1 fs-md">No image uploaded</p>
                     <?php endif; ?>
                 </div>
 
@@ -97,13 +97,13 @@
                     <div class="upload-icon"></div>
                     <div class="upload-text">
                         <strong>Click to upload new image</strong><br>
-                        <span style="font-size:0.8rem;color:#999;">JPG, PNG up to 5MB</span>
+                        <span class="fs-8 text-muted-999">JPG, PNG up to 5MB</span>
                     </div>
                 </div>
-                <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="previewImage(event)">
-                <div id="newPreview" style="display:none; text-align:center; margin-top:12px;">
-                    <img id="previewImg" style="max-width:100%;max-height:150px;border-radius:10px;border:2px dashed var(--success);">
-                    <p class="text-muted" style="font-size:0.8rem; margin-top:6px;">New image preview</p>
+                <input type="file" id="imageInput" accept="image/*" class="display-none" onchange="previewImage(event)">
+                <div id="newPreview" class="display-none text-center mt-12">
+                    <img id="previewImg" class="image-new-preview-box">
+                    <p class="text-muted fs-8 mt-6">New image preview</p>
                 </div>
             </div>
         </div>
