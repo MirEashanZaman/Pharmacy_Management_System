@@ -86,11 +86,11 @@ class AuthController {
             }
         }
 
-        $viewFile = __DIR__ . '/../views/register.php';
+        $viewFile = __DIR__ . '/../views/registration.php';
         if (file_exists($viewFile)) {
             require $viewFile;
         } else {
-            echo "Register View not found.";
+            echo "Registration View not found.";
         }
     }
 
@@ -119,16 +119,36 @@ class AuthController {
                 $error = 'Name and phone are required.'; 
             } else {
                 $pic = $user['profile_pic'];
-                if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error']===0) {
-                    $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
-                    if (!in_array($ext,['jpg','jpeg','png','gif'])) { 
-                        $error = 'Invalid image format.'; 
-                    } elseif ($_FILES['profile_pic']['size']>2097152) { 
-                        $error = 'Image must be under 2MB.'; 
+                if (isset($_POST['remove_pic']) && $_POST['remove_pic'] === '1') {
+                    $pic = 'default_user.png';
+                }
+                if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['name'] !== '') {
+                    if ($_FILES['profile_pic']['error'] !== 0) {
+                        if ($_FILES['profile_pic']['error'] === 1 || $_FILES['profile_pic']['error'] === 2) {
+                            $error = 'Image size exceeds maximum limit (2MB).';
+                        } else {
+                            $error = 'File upload failed. Error code: ' . $_FILES['profile_pic']['error'];
+                        }
                     } else {
-                        if (!is_dir('uploads/profiles')) mkdir('uploads/profiles', 0755, true);
-                        $pic = uniqid().'.'.$ext;
-                        move_uploaded_file($_FILES['profile_pic']['tmp_name'], 'uploads/profiles/'.$pic);
+                        $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+                        if (!in_array($ext,['jpg','jpeg','png','gif'])) { 
+                            $error = 'Invalid image format. Allowed formats: JPG, JPEG, PNG, GIF.'; 
+                        } elseif ($_FILES['profile_pic']['size']>2097152) { 
+                            $error = 'Image must be under 2MB.'; 
+                        } else {
+                            $uploadDir = dirname(__DIR__) . '/uploads/profiles';
+                            if (!is_dir($uploadDir)) {
+                                if (!mkdir($uploadDir, 0755, true)) {
+                                    $error = 'Failed to create directory for profile pictures.';
+                                }
+                            }
+                            if (!$error) {
+                                $pic = uniqid().'.'.$ext;
+                                if (!move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploadDir . '/' . $pic)) {
+                                    $error = 'Failed to save uploaded file on server. Check write permissions of uploads directory.';
+                                }
+                            }
+                        }
                     }
                 }
                 if (!$error) {
