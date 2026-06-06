@@ -1,0 +1,19 @@
+.css-chart-bar-wrap{display:flex;align-items:flex-end;gap:10px;padding:16px 0 0 0;min-height:180px;}
+.css-chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.css-chart-bar{width:100%;min-width:28px;border-radius:6px 6px 0 0;transition:height 0.5s ease;position:relative;background:linear-gradient(180deg,#6366f1 0%,#818cf8 100%);}
+.css-chart-bar:hover{filter:brightness(1.15);transform:scaleX(1.08);cursor:default;}
+.css-chart-val{font-size:0.72rem;font-weight:700;color:var(--primary-dark);white-space:nowrap;}
+.css-chart-label{font-size:0.7rem;color:#666;font-weight:600;text-align:center;}
+.css-hbar-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f3f4f6;}
+.css-hbar-row:last-child{border-bottom:none;}
+.css-hbar-name{width:120px;font-size:0.82rem;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.css-hbar-track{flex:1;height:22px;background:#f3f4f6;border-radius:6px;overflow:hidden;position:relative;}
+.css-hbar-fill{height:100%;border-radius:6px;transition:width 0.6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.css-hbar-fill span{font-size:0.68rem;font-weight:700;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.2);}
+.css-status-track{display:flex;height:28px;border-radius:8px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.css-status-seg{transition:width 0.5s ease;position:relative;display:flex;align-items:center;justify-content:center;}
+.css-status-seg:hover{filter:brightness(1.1);}
+.css-status-seg span{font-size:0.65rem;font-weight:700;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.15);}
+.css-status-legend{display:flex;flex-wrap:wrap;gap:12px;}
+.css-status-legend-item{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:#555;}
+.css-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
