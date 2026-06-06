@@ -58,10 +58,12 @@ class OrderController {
             $delDist = trim($_POST['del_district']??'');
             $delUpaz = trim($_POST['del_upazila']??'');
             $delPhone = trim($_POST['del_phone']??'');
-            $payMethod = $_POST['payment_method']??'cod';
+            $payMethod = $_POST['payment_method']??'';
 
             if (empty($delAddress)||empty($delDiv)||empty($delDist)||empty($delPhone)) {
                 $error = 'Please fill all delivery details.';
+            } elseif (empty($payMethod)) {
+                $error = 'Please select a payment method.';
             } elseif (empty($itemsList)) {
                 $error = 'Your cart is empty.';
             } else {
@@ -86,26 +88,45 @@ class OrderController {
                 }
 
                 if (!$error) {
-                    $this->db->begin_transaction();
-                    try {
-                        $orderId = $this->orderModel->insertOrder($user['id'], $total, $delAddress, $delDiv, $delDist, $delUpaz, $delPhone, $payMethod, $prescriptionImg, 0);
-                        if ($orderId) {
-                            foreach($itemsList as $item) {
-                                $this->orderModel->insertOrderItem($orderId, $item['medicine_id'], $item['quantity'], $item['price']);
-                                $this->orderModel->deductMedicineStock($item['medicine_id'], $item['quantity']);
+                    $deliveryCharge = $total >= 500 ? 0 : 60;
+                    $grandTotal = $total + $deliveryCharge;
+
+                    if ($payMethod === 'cod') {
+                        $this->db->begin_transaction();
+                        try {
+                            $orderId = $this->orderModel->insertOrder($user['id'], $grandTotal, $delAddress, $delDiv, $delDist, $delUpaz, $delPhone, $payMethod, $prescriptionImg, 0);
+                            if ($orderId) {
+                                foreach($itemsList as $item) {
+                                    $this->orderModel->insertOrderItem($orderId, $item['medicine_id'], $item['quantity'], $item['price']);
+                                    $this->orderModel->deductMedicineStock($item['medicine_id'], $item['quantity']);
+                                }
+                                $this->orderModel->clearCart($user['id']);
+                                $this->db->commit();
+                                $success = "Order #$orderId placed successfully!";
+                                $itemsList = [];
+                                $total = 0;
+                                $needsPrescription = false;
+                            } else {
+                                throw new Exception("Insert order failed");
                             }
-                            $this->orderModel->clearCart($user['id']);
-                            $this->db->commit();
-                            $success = "Order #$orderId placed successfully!";
-                            $itemsList = [];
-                            $total = 0;
-                            $needsPrescription = false;
-                        } else {
-                            throw new Exception("Insert order failed");
+                        } catch(Exception $e) {
+                            $this->db->rollback();
+                            $error = 'Order failed. Please try again.';
                         }
-                    } catch(Exception $e) {
-                        $this->db->rollback();
-                        $error = 'Order failed. Please try again.';
+                    } else {
+                        // Store checkout data in session and redirect to payment.php
+                        $_SESSION['checkout_data'] = [
+                            'total' => $grandTotal,
+                            'del_address' => $delAddress,
+                            'del_division' => $delDiv,
+                            'del_district' => $delDist,
+                            'del_upazila' => $delUpaz,
+                            'del_phone' => $delPhone,
+                            'payment_method' => $payMethod,
+                            'prescription_img' => $prescriptionImg
+                        ];
+                        header("Location: payment.php");
+                        exit;
                     }
                 }
             }
@@ -143,17 +164,6 @@ class OrderController {
                 die("CSRF Token validation failed.");
             }
             $_POST = sanitizeInput($_POST);
-        }
-
-        if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['update_status'])) {
-            $oid = intval($_POST['order_id']);
-            $status = $_POST['status'];
-            $allowed = ['pending','processing','shipped','delivered','cancelled'];
-            if (in_array($status, $allowed)) {
-                if ($this->orderModel->updateOrderStatus($oid, $status)) {
-                    $success = "Order #$oid status updated to $status.";
-                }
-            }
         }
 
         if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['approve_rx'])) {
@@ -213,6 +223,16 @@ class OrderController {
                 $stmt->bind_param("i", $oid);
                 if ($stmt->execute()) {
                     $success = "Prescription for Order #$oid rejected.";
+                }
+            }
+            if (isset($_POST['update_status'])) {
+                $oid = intval($_POST['order_id']);
+                $status = $_POST['status'];
+                $allowed = ['pending','processing','shipped','delivered','cancelled'];
+                if (in_array($status, $allowed)) {
+                    if ($this->orderModel->updateOrderStatus($oid, $status)) {
+                        $success = "Order #$oid status updated to $status.";
+                    }
                 }
             }
         }
